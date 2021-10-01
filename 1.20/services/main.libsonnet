@@ -15,6 +15,7 @@ local c = import '../../common/common.libsonnet';
       spec: {
         selector: if selector != null then selector else { app: name },
         ports: ports,
+        type: type,
       },
     },
 
