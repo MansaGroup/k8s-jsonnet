@@ -2,7 +2,7 @@ local c = import '../../common/common.libsonnet';
 
 {
 
-  default(name, ports, selector=null, ns=null)::
+  default(name, ports, selector=null, ns=null, type='ClusterIP')::
     assert std.isArray(ports);
     assert std.length(ports) > 0;
     assert std.length(ports) == 1
