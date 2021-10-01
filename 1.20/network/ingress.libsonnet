@@ -3,29 +3,26 @@ local c = import '../../common/common.libsonnet';
 // paths must be a list of objects with keys :
 // route(string), svcName(string), svcPort(string|number), routeType(optional, string)
 {
-  nginx(name, domain, paths, clusterIssuer='letsencrypt-production', ns=null)::
+  default(name, domain, staticIp, paths, ns=null)::
+    assert domain != null;
+    assert staticIp != null;
     assert std.length(paths) > 0;
     assert std.objectHas(paths[0], 'route');
     assert std.objectHas(paths[0], 'svcName');
     assert std.objectHas(paths[0], 'svcPort');
 
     c.apiVersion('networking.k8s.io/v1')
+    + c.kind('Ingress')
     + c.metadata.new(
       name,
       ns,
       annotations={
-        'cert-manager.io/cluster-issuer': clusterIssuer,
-        'kubernetes.io/tls-acme': 'true',
-        'kubernetes.io/ingress.class': 'nginx',
+        'networking.gke.io/managed-certificates': name,
+        'kubernetes.io/ingress.global-static-ip-name': staticIp,
       }
     )
     + {
-      kind: 'Ingress',
       spec: {
-        tls: [{
-          hosts: [domain],
-          secretName: name + '-cert',
-        }],
         rules: [
           {
             host: domain,
@@ -46,8 +43,8 @@ local c = import '../../common/common.libsonnet';
       },
     },
 
-  path(route, svcName, svcPort, type='Prefix')::
-    local _type = if type == null then 'Prefix' else type;
+  path(route, svcName, svcPort, type='ImplementationSpecific')::
+    local _type = if type == null then 'ImplementationSpecific' else type;
     {
       path: route,
       pathType: _type,

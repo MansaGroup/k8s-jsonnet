@@ -1,4 +1,4 @@
-local pod_120 = import '../../1.20/workloads/pod.libsonnet';
+local pod_120 = import '../../1.20/workload/pod.libsonnet';
 
 // doesn't change anything, just an example about how it could
 pod_120 {

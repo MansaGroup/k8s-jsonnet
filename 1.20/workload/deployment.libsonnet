@@ -6,9 +6,9 @@ local c = import '../../common/common.libsonnet';
 
     default(name, image, port, replicas=null, ns=null)::
       c.apiVersion('apps/v1')
+      + c.kind('Deployment')
       + c.metadata.new(name, ns)
       + {
-        kind: 'Deployment',
         spec: deploy.spec(name, image, port, replicas),
       },
 
@@ -16,15 +16,11 @@ local c = import '../../common/common.libsonnet';
       {
         revisionHistoryLimit: 2,
         selector: {
-          matchLabels: {
-            app: name,
-          },
+          matchLabels: c.labelSelector(name),
         },
         template: {
           metadata: {
-            labels: {
-              app: name,
-            },
+            labels: c.labelSelector(name),
           },
           spec: k.pod.spec(name, image, port),
         },
