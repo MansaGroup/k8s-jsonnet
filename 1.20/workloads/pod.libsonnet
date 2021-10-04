@@ -40,18 +40,9 @@ local c = import '../../common/common.libsonnet';
       removeAllProbes():: {
         spec+: {
           containers: [
-            x
-            + {
-              readinessProbe+: {
-                httpGet+: {
-                  path: '/'
-                },
-              },
-              livenessProbe+: {
-                httpGet+: {
-                  path: '/'
-                },
-              },
+            x {
+              readinessProbe:: {},
+              livenessProbe:: {},
             }
             for x in super.containers
           ],
