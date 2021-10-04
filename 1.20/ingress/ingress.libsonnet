@@ -27,11 +27,17 @@ local c = import '../../common/common.libsonnet';
 
   gceMany(name, domainsAndPaths, ipName, certName=null, ns=null)::
     $.gce(name, '', [], ipName, certName, ns)
-    + x {
+    + {
       spec+: {
-        rules+: $.spec(x.domain, std.map(function(p) p { routeType: 'ImplementationSpecific' }, x.paths))
+        rules+: std.flatMap(
+          std.objectValues,
+          std.objectValues({
+            [x.domain]: $.spec(x.domain, std.map(function(p) p { routeType: 'ImplementationSpecific' }, x.paths))
+            for x in domainsAndPaths
+          }),
+        ),
       },
-    } for x in domainsAndPaths,
+    },
 
   nginx(name, domain, paths, clusterIssuer='letsencrypt-production', ns=null, tls=true)::
     c.apiVersion('networking.k8s.io/v1')
