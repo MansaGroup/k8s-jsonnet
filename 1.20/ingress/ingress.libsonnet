@@ -25,10 +25,18 @@ local c = import '../../common/common.libsonnet';
       spec: $.spec(domain, fixedPaths),
     },
 
-  gceMany(name, domainsAndPaths, ipName, certName=null, ns=null)::
+  gceMany(name, defaultServiceName, defaultServicePort, domainsAndPaths, ipName, certName=null, ns=null)::
     $.gce(name, '', [], ipName, certName, ns)
     + {
       spec+: {
+        defaultBackend: {
+          service: {
+            name: defaultServiceName,
+            port: {
+              number: defaultServicePort,
+            },
+          },
+        },
         rules: std.flattenArrays(
           std.objectValues({
             [x.domain]: $.spec(x.domain, std.map(function(p) p { routeType: 'ImplementationSpecific' }, x.paths)).rules
