@@ -1,6 +1,6 @@
 {
   deps(k):: {
-    default(name, image, port=3000, replicas=null, domain=null, ingressIp=null, ingressCert=null, ns=null)::
+    default(name, image, port=8080, replicas=null, domain=null, ingressIp=null, ingressCert=null, ns=null)::
       assert domain == null || (ingressIp != null && ingressCert != null);
       {
         deploy: k.deploy.default(name, image, port, replicas=replicas, ns=ns),

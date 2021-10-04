@@ -58,14 +58,6 @@ local c = import '../../common/common.libsonnet';
         },
       },
 
-      setProbesToRoot():: {
-        spec+: {
-          template+: {
-            
-          },
-        },
-      },
-
       updateContainer(containerName, container):: {
         spec+: {
           containers: [
