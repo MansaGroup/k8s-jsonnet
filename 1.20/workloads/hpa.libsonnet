@@ -1,7 +1,7 @@
 local c = import '../../common/common.libsonnet';
 
 {
-  default(name, resources=[], maxReplicas=100, ns=null)::
+  default(name, resources=[], maxReplicas=5, ns=null)::
     c.apiVersion('autoscaling/v2beta2')
     + c.kind('HorizontalPodAutoscaler')
     + c.metadata.new(name, ns)
