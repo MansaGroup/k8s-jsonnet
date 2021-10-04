@@ -1,0 +1,62 @@
+name: ci
+
+on: push
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '14'
+  GOJSONNET_VERSION: '0.17.0'
+  POLARIS_VERSION: '4.2.0'
+  KUBEVAL_VERSION: '0.16.1'
+
+jobs:
+  test:
+    runs-on: [self-hosted, ci]
+    container: ubuntu:latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install required dependencies
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends ca-certificates \
+            curl jq
+        env:
+          DEBIAN_FRONTEND: noninteractive
+
+      - name: Use Node.js ${NODE_VERSION}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install Jsonnet
+        run: |
+          mkdir -p /tmp/go-jsonnet
+          curl -L -o /tmp/go-jsonnet.tar.gz https://github.com/google/go-jsonnet/releases/download/v${{ env.GOJSONNET_VERSION }}/go-jsonnet_${{ env.GOJSONNET_VERSION }}_Linux_x86_64.tar.gz
+          tar -xzf /tmp/go-jsonnet.tar.gz -C /tmp/go-jsonnet
+          echo "/tmp/go-jsonnet" >> $GITHUB_PATH
+
+      - name: Install Polaris
+        run: |
+          mkdir -p /tmp/polaris
+          curl -L -o /tmp/polaris.tar.gz https://github.com/FairwindsOps/polaris/releases/download/${{ env.POLARIS_VERSION }}/polaris_linux_amd64.tar.gz
+          tar -xzf /tmp/polaris.tar.gz -C /tmp/polaris
+          echo "/tmp/polaris" >> $GITHUB_PATH
+
+      - name: Install Kubeval
+        run: |
+          mkdir -p /tmp/kubeval
+          curl -L -o /tmp/kubeval.tar.gz https://github.com/instrumenta/kubeval/releases/download/v${{ env.KUBEVAL_VERSION }}/kubeval-linux-amd64.tar.gz
+          tar -xzf /tmp/kubeval.tar.gz -C /tmp/kubeval
+          echo "/tmp/kubeval" >> $GITHUB_PATH
+
+      - name: Install Bats
+        run: npm i -g bats
+
+      - name: Run tests
+        run: bats -r .
