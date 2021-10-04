@@ -29,8 +29,7 @@ local c = import '../../common/common.libsonnet';
     $.gce(name, '', [], ipName, certName, ns)
     + {
       spec+: {
-        rules: std.flatMap(
-          std.objectValues,
+        rules: std.flattenArrays(
           std.objectValues({
             [x.domain]: $.spec(x.domain, std.map(function(p) p { routeType: 'ImplementationSpecific' }, x.paths)).rules
             for x in domainsAndPaths
