@@ -1,7 +1,7 @@
 local c = import '../../common/common.libsonnet';
 
 {
-  default(name, iapSecretName='mansa-iap-oauth-credentials', ns=null)::
+  default(name, iapSecretName='ss-iap-oauth-credentials', ns=null)::
     c.apiVersion('networking.gke.io/v1beta1')
     + c.kind('BackendConfig')
     + c.metadata.new(name, ns)
