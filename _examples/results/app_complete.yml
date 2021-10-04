@@ -9,11 +9,13 @@ spec:
   revisionHistoryLimit: 2
   selector:
     matchLabels:
-      app: appName
+      app.kubernetes.io/name: appName
+      app.kubernetes.io/part-of: appName
   template:
     metadata:
       labels:
-        app: appName
+        app.kubernetes.io/name: appName
+        app.kubernetes.io/part-of: appName
     spec:
       containers:
         - image: appImage:v1.0
@@ -110,19 +112,13 @@ spec:
         - myapp.voodoo.io
       secretName: appName-cert
 ---
-apiVersion: irsa.voodoo.io/v1alpha1
-kind: IamRoleServiceAccount
+apiVersion: v1
+kind: ServiceAccount
 metadata:
   labels:
     app: appName
   name: appName
   namespace: my-hardcoded-ns
-spec:
-  policy:
-    statement:
-      - action:
-          - s3::List*
-        resource: arn:aws:s3:::my-s3-bucket
 ---
 apiVersion: v1
 kind: Service
@@ -136,4 +132,6 @@ spec:
     - name: http
       port: 3000
   selector:
-    app: appName
+    app.kubernetes.io/name: appName
+    app.kubernetes.io/part-of: appName
+  type: ClusterIP
