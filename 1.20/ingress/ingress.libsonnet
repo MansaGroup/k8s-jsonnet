@@ -32,7 +32,7 @@ local c = import '../../common/common.libsonnet';
         rules: std.flatMap(
           std.objectValues,
           std.objectValues({
-            [x.domain]: $.spec(x.domain, std.map(function(p) p { routeType: 'ImplementationSpecific' }, x.paths))
+            [x.domain]: $.spec(x.domain, std.map(function(p) p { routeType: 'ImplementationSpecific' }, x.paths)).rules
             for x in domainsAndPaths
           }),
         ),
