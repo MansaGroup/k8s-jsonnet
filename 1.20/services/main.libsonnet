@@ -1,7 +1,6 @@
 local c = import '../../common/common.libsonnet';
 
 {
-
   default(name, ports, selector=null, ns=null, type='ClusterIP')::
     assert std.isArray(ports);
     assert std.length(ports) > 0;
@@ -9,11 +8,11 @@ local c = import '../../common/common.libsonnet';
            || std.length(std.filter(function(p) p.name == null, ports)) == 0;
 
     c.apiVersion('v1')
-    + { kind: 'Service' }
+    + c.kind('Service')
     + c.metadata.new(name, ns)
     + {
       spec: {
-        selector: if selector != null then selector else { app: name },
+        selector: if selector != null then selector else c.labelSelector(name),
         ports: ports,
         type: type,
       },

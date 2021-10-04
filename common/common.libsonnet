@@ -1,5 +1,12 @@
 {
   apiVersion(v='v1'):: { apiVersion: v },
+  kind(v):: { kind: v },
+  
+  labelSelector(name, partOf=name)::
+    {
+      'app.kubernetes.io/name': name,
+      'app.kubernetes.io/part-of': partOf,
+    },
 
   metadata:: {
     new(name, ns=null, labels=null, annotations=null):: {

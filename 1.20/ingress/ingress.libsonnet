@@ -8,11 +8,11 @@ local c = import '../../common/common.libsonnet';
 //   routeType: string (optional),
 // }
 {
-
   gce(name, domain, paths, ip, ns=null, certName=null)::
     local fixedPaths = std.map(function(p) p { routeType: 'ImplementationSpecific' }, paths);
 
     c.apiVersion('networking.k8s.io/v1')
+    + c.kind('Ingress')
     + c.metadata.new(
       name,
       ns,
@@ -23,12 +23,12 @@ local c = import '../../common/common.libsonnet';
       }
     )
     + {
-      kind: 'Ingress',
       spec: $.spec(domain, fixedPaths),
     },
 
   nginx(name, domain, paths, clusterIssuer='letsencrypt-production', ns=null, tls=true)::
     c.apiVersion('networking.k8s.io/v1')
+    + c.kind('Ingress')
     + c.metadata.new(
       name,
       ns,
@@ -39,7 +39,6 @@ local c = import '../../common/common.libsonnet';
       }
     )
     + {
-      kind: 'Ingress',
       spec: $.spec(domain, paths, name + '-cert'),
     },
 

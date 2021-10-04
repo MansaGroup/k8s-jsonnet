@@ -8,5 +8,4 @@
   pod: (import './workloads/pod.libsonnet').deps(self),
   sa: import './authentication/sa.libsonnet',
   svc: import './services/main.libsonnet',
-  tls: import './tls/issuer.libsonnet',
 }

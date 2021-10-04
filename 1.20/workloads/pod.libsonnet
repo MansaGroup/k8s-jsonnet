@@ -6,9 +6,9 @@ local c = import '../../common/common.libsonnet';
 
     default(name, image, port=null)::
       c.apiVersion('v1')
+      + c.kind('Pod')
       + c.metadata.new(name)
       + {
-        kind: 'Pod',
         spec: pod.spec(name, image, port),
       },
 
