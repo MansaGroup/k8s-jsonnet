@@ -7,7 +7,7 @@ local c = import '../../common/common.libsonnet';
                                    else 'staging');
 
     c.apiVersion('cert-manager.io/v1')
-    + { kind: 'Issuer' }
+    + c.kind('Issuer')
     + c.metadata.new(name)
     + {
       spec: {

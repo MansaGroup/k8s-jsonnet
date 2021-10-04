@@ -6,7 +6,7 @@ local c = import '../../common/common.libsonnet';
     assert std.length(domains) > 0;
 
     c.apiVersion('networking.gke.io/v1')
-    + { kind: 'ManagedCertificate' }
+    + c.kind('ManagedCertificate')
     + c.metadata.new(name)
     + {
       spec: {
