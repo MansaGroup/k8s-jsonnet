@@ -8,7 +8,7 @@ local c = import '../../common/common.libsonnet';
 //   routeType: string (optional),
 // }
 {
-  gce(name, domain, paths, ip, ns=null, certName=null)::
+  gce(name, domain, paths, ipName, certName=null, ns=null)::
     local fixedPaths = std.map(function(p) p { routeType: 'ImplementationSpecific' }, paths);
 
     c.apiVersion('networking.k8s.io/v1')
@@ -18,9 +18,8 @@ local c = import '../../common/common.libsonnet';
       ns,
       annotations={
         'kubernetes.io/ingress.class': 'gce',
-        'kubernetes.io/ingress.global-static-ip-name': ip,
-        'networking.gke.io/managed-certificates': certName,
-      }
+        'kubernetes.io/ingress.global-static-ip-name': ipName,
+      } + (if certName != null then { 'networking.gke.io/managed-certificates': certName } else {})
     )
     + {
       spec: $.spec(domain, fixedPaths),
