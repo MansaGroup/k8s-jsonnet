@@ -29,7 +29,7 @@ local c = import '../../common/common.libsonnet';
     $.gce(name, '', [], ipName, certName, ns)
     + {
       spec+: {
-        rules+: std.flatMap(
+        rules: std.flatMap(
           std.objectValues,
           std.objectValues({
             [x.domain]: $.spec(x.domain, std.map(function(p) p { routeType: 'ImplementationSpecific' }, x.paths))
@@ -56,10 +56,6 @@ local c = import '../../common/common.libsonnet';
     },
 
   spec(domain, paths, secretName=null)::
-    assert std.length(paths) > 0;
-    assert std.objectHas(paths[0], 'route');
-    assert std.objectHas(paths[0], 'svcName');
-    assert std.objectHas(paths[0], 'svcPort');
     {
       [
       if secretName != null then 'tls' else null]: [
@@ -88,6 +84,10 @@ local c = import '../../common/common.libsonnet';
     },
 
   path(route, svcName, svcPort, type='Prefix')::
+    assert route != null;
+    assert svcName != null;
+    assert svcPort != null;
+
     local _type = if type == null then 'Prefix' else type;
     {
       path: route,
