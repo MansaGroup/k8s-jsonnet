@@ -41,6 +41,12 @@ local c = import '../../common/common.libsonnet';
         },
       },
 
+      setProbesToRoot():: {
+        spec+: {
+          template+: k.pod.utils.setProbesToRoot(),
+        },
+      },
+
       // by default, this will update all containers
       // pass it the name of the container to update to only update this one
       overrideContainer(overrides, name=null)::
