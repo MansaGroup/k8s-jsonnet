@@ -49,6 +49,36 @@ local c = import '../../common/common.libsonnet';
         },
       },
 
+      setResourceLimit(rsName, rsValue):: {
+        spec+: {
+          containers: [
+            x {
+              resources+: {
+                limits+: {
+                  [rsName]: rsValue,
+                },
+              },
+            }
+            for x in super.containers
+          ],
+        },
+      },
+
+      setResourceRequest(rsName, rsValue):: {
+        spec+: {
+          containers: [
+            x {
+              resources+: {
+                requests+: {
+                  [rsName]: rsValue,
+                },
+              },
+            }
+            for x in super.containers
+          ],
+        },
+      },
+
       updateContainer(containerName, container):: {
         spec+: {
           containers: [

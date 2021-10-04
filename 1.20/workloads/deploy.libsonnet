@@ -41,6 +41,18 @@ local c = import '../../common/common.libsonnet';
         },
       },
 
+      setResourceLimit(rsName, rsValue):: {
+        spec+: {
+          template+: k.pod.utils.setResourceLimit(),
+        },
+      },
+
+      setResourceRequest(rsName, rsValue):: {
+        spec+: {
+          template+: k.pod.utils.setResourceRequest(),
+        },
+      },
+
       // by default, this will update all containers
       // pass it the name of the container to update to only update this one
       overrideContainer(overrides, name=null)::
