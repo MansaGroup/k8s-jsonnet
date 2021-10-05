@@ -12,7 +12,7 @@ local c = import '../../common/common.libsonnet';
     + c.metadata.new(name, ns)
     + {
       spec: {
-        selector: if selector != null then selector else c.labelSelector(name),
+        selector: if selector != null then selector else { app: name },
         ports: ports,
         type: type,
       },

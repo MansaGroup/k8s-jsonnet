@@ -9,7 +9,7 @@ local c = import '../../common/common.libsonnet';
       resources: {
         limits: {
           cpu: '200m',
-          memory: '512Mi',
+          memory: '100Mi',
         },
         requests: {
           cpu: '100m',

@@ -8,13 +8,11 @@ spec:
   revisionHistoryLimit: 2
   selector:
     matchLabels:
-      app.kubernetes.io/name: appName
-      app.kubernetes.io/part-of: appName
+      app: appName
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: appName
-        app.kubernetes.io/part-of: appName
+        app: appName
     spec:
       containers:
         - image: appImage:v1.0
@@ -62,7 +60,7 @@ metadata:
     app: appName
   name: appName
 spec:
-  maxReplicas: 100
+  maxReplicas: 5
   metrics:
     - resource:
         name: memory
@@ -100,6 +98,5 @@ spec:
     - name: http
       port: 3000
   selector:
-    app.kubernetes.io/name: appName
-    app.kubernetes.io/part-of: appName
+    app: appName
   type: ClusterIP
