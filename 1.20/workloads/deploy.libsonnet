@@ -45,15 +45,15 @@ local c = import '../../common/common.libsonnet';
         },
       },
 
-      setResourceLimit(rsName, rsValue):: {
+      setResourceLimit(rsName, rsValue, containerName=null):: {
         spec+: {
-          template+: k.pod.utils.setResourceLimit(),
+          template+: k.pod.utils.setResourceLimit(rsName, rsValue, containerName),
         },
       },
 
-      setResourceRequest(rsName, rsValue):: {
+      setResourceRequest(rsName, rsValue, containerName=null):: {
         spec+: {
-          template+: k.pod.utils.setResourceRequest(),
+          template+: k.pod.utils.setResourceRequest(rsName, rsValue, containerName),
         },
       },
 
