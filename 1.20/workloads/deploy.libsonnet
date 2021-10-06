@@ -16,11 +16,15 @@ local c = import '../../common/common.libsonnet';
       {
         revisionHistoryLimit: 2,
         selector: {
-          matchLabels: c.labelSelector(name),
+          matchLabels: {
+            app: name,
+          },
         },
         template: {
           metadata: {
-            labels: c.labelSelector(name),
+            labels: {
+              app: name,
+            },
           },
           spec: k.pod.spec(name, image, port),
         },

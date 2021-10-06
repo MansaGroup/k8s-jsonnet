@@ -21,6 +21,11 @@ do
     $gen -y "std.objectValues(${k8s[$v]}._app.default('name', 'image:v1'))" | $polaris
   }
   
+  @test "app: irsa" {
+    m=$($gen "${k8s[$v]}._app.default('name', 'image:v1', awsPermissions=[{resource:'bla', action:['s3::List']}])")
+    jq_test "$m" '.irsa.kind' 'IamRoleServiceAccount'
+  }
+  
   @test "app: ingress" {
     m=$($gen "${k8s[$v]}._app.default('name', 'image:v1', domain='voodoo.io')")
     jq_test "$m" '.ingress.kind' 'Ingress'

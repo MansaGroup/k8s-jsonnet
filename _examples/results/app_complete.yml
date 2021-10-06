@@ -9,13 +9,11 @@ spec:
   revisionHistoryLimit: 2
   selector:
     matchLabels:
-      app.kubernetes.io/name: appName
-      app.kubernetes.io/part-of: appName
+      app: appName
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: appName
-        app.kubernetes.io/part-of: appName
+        app: appName
     spec:
       containers:
         - image: appImage:v1.0
@@ -64,7 +62,7 @@ metadata:
   name: appName
   namespace: my-hardcoded-ns
 spec:
-  maxReplicas: 100
+  maxReplicas: 5
   metrics:
     - resource:
         name: memory
@@ -112,13 +110,19 @@ spec:
         - myapp.voodoo.io
       secretName: appName-cert
 ---
-apiVersion: v1
-kind: ServiceAccount
+apiVersion: irsa.voodoo.io/v1alpha1
+kind: IamRoleServiceAccount
 metadata:
   labels:
     app: appName
   name: appName
   namespace: my-hardcoded-ns
+spec:
+  policy:
+    statement:
+      - action:
+          - s3::List*
+        resource: arn:aws:s3:::my-s3-bucket
 ---
 apiVersion: v1
 kind: Service
@@ -132,6 +136,5 @@ spec:
     - name: http
       port: 3000
   selector:
-    app.kubernetes.io/name: appName
-    app.kubernetes.io/part-of: appName
+    app: appName
   type: ClusterIP
