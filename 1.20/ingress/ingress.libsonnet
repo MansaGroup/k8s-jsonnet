@@ -46,20 +46,44 @@ local c = import '../../common/common.libsonnet';
       },
     },
 
-  nginx(name, domain, paths, clusterIssuer='letsencrypt-production', ns=null, tls=true)::
+  nginx(name, domain, paths, ingressClass='nginx', clusterIssuer='letsencrypt-production', ns=null)::
+    local secretName = if clusterIssuer != null then name + 'cert' else null;
+
     c.apiVersion('networking.k8s.io/v1')
     + c.kind('Ingress')
     + c.metadata.new(
       name,
       ns,
       annotations={
+        'kubernetes.io/ingress.class': ingressClass,
+      } + (if clusterIssuer != null then {
         'cert-manager.io/cluster-issuer': clusterIssuer,
         'kubernetes.io/tls-acme': 'true',
-        'kubernetes.io/ingress.class': 'nginx',
-      }
+      } else {}),
     )
     + {
-      spec: $.spec(domain, paths, name + '-cert'),
+      spec: $.spec(domain, paths, secretName),
+    },
+
+  nginxMany(name, defaultServiceName, defaultServicePort, domainsAndPaths, ingressClass='nginx', clusterIssuer='letsencrypt-production', ns=null)::
+    $.nginx(name, '', [], ingressClass, clusterIssuer, ns)
+    + {
+      spec+: {
+        defaultBackend: {
+          service: {
+            name: defaultServiceName,
+            port: {
+              number: defaultServicePort,
+            },
+          },
+        },
+        rules: std.flattenArrays(
+          std.objectValues({
+            [x.domain]: $.spec(x.domain, x.paths).rules
+            for x in domainsAndPaths
+          }),
+        ),
+      },
     },
 
   spec(domain, paths, secretName=null)::
