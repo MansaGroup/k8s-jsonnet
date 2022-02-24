@@ -1,7 +1,7 @@
 local c = import '../../common/common.libsonnet';
 
 {
-  default(name, dnsNames, secretName=null, issuerKind="ClusterIssuer", issuerName="letsencrypt-production", ns)::
+  default(name, dnsNames, secretName=null, issuerKind="ClusterIssuer", issuerName="letsencrypt-production", ns=null)::
     assert name != null;
     assert dnsNames != null;
     assert issuerKind != null;
