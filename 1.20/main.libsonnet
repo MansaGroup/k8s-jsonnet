@@ -4,6 +4,7 @@
   container: import './workloads/container.libsonnet',
   deploy: (import './workloads/deploy.libsonnet').deps(self),
   hpa: import './workloads/hpa.libsonnet',
+  pdb: import './workloads/pdb.libsonnet',
   ingress: import './ingress/ingress.libsonnet',
   pod: (import './workloads/pod.libsonnet').deps(self),
   sa: import './authentication/sa.libsonnet',
