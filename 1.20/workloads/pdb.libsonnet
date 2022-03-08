@@ -9,13 +9,20 @@ local c = import '../../common/common.libsonnet';
     + c.metadata.new(name, ns)
     + {
       spec: {
-        minAvailable: minAvailable,
-        maxUnavailable: maxUnavailable,
         selector: {
           matchLabels: {
             app: name,
           },
         },
       },
+    }
+    + if minAvailable != null then {
+      spec+: {
+        minAvailable: minAvailable,
+      }
+    } else {
+      spec+: {
+        maxUnavailable: maxUnavailable,
+      }
     },
 }
