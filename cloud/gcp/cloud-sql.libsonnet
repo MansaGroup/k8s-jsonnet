@@ -2,7 +2,7 @@ local k = import '../../1.21/main.libsonnet';
 
 {
   // gsaEmail stands for Google Service Account Email
-  addCloudSQLEnv(gsaEmail, dbName, schema='public')::
+  injectEnv(gsaEmail, dbName, schema='public')::
     assert dbName != null;
 
     {
@@ -37,20 +37,20 @@ local k = import '../../1.21/main.libsonnet';
   // connectionName below is displayed in the GCP console.
   // it takes the form :
   // <project_id>:<region>:<db_name>
-  injectCloudSQLSidecar(connectionName)::
+  injectSidecar(connectionName)::
     assert connectionName != null;
 
     {
       spec+: {
         template+: {
           spec+: {
-            containers+: [$.renderCloudSQLSidecarContainer(connectionName)],
+            containers+: [$.renderSidecar(connectionName)],
           },
         },
       },
     },
 
-  renderCloudSQLSidecarContainer(connectionName)::
+  renderSidecar(connectionName)::
     assert connectionName != null;
 
     k.container.spec(
