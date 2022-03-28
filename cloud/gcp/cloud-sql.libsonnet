@@ -21,7 +21,7 @@ local k = import '../../1.21/main.libsonnet';
         },
         {
           name: 'DATABASE_PASSWORD',
-          value: 'dummy_password',
+          value: 'not_used_but_must_be_present',
         },
         {
           name: 'DATABASE_NAME',
