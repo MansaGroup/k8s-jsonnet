@@ -9,9 +9,10 @@ let
     { };
 
   voodoo = import
-    (builtins.fetchGit {
-      url = "https://github.com/VoodooTeam/devops-nix-pkgs.git";
-      ref = "v0.1.1";
+    (builtins.fetchTarball {
+      name = "voodoo-0.1.1";
+      url = "https://github.com/VoodooTeam/devops-nix-pkgs/archive/refs/tags/v0.1.1.tar.gz";
+      sha256 = "1jxw6daiw8glpsq82gr29vdzmzvncr8vqa8rl6da5p26gbj6pxnn";
     })
     { inherit pkgs system; };
 in
